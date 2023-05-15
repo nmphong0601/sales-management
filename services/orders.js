@@ -1,5 +1,4 @@
 const Order = require("../respositories/order");
-const config = require("../config");
 
 async function single(id) {
   return Order.getSingle(id);
@@ -9,8 +8,8 @@ async function all() {
   return Order.getAll();
 }
 
-async function paged(page = 1) {
-  return Order.getPage(page, config.pageSize);
+async function paged(page = 1, pageSize = 10) {
+  return Product.getPage(page, pageSize);
 }
 
 async function insert(data) {

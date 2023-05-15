@@ -1,10 +1,8 @@
 var express = require("express");
-var router = express.Router();
+var router = express.Router({ mergeParams: true });
 
-const categoryRouter = require("./categories");
-const productRouter = require("./products");
-
-router.use("/v1/categories", categoryRouter);
-router.use("/v1/products", productRouter);
+router.use("/v1/categories", require("./categories"));
+router.use("/v1/comments", require("./comments"));
+router.use("/v1/products", require("./products"));
 
 module.exports = router;

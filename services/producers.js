@@ -1,5 +1,4 @@
 const Producer = require("../respositories/producer");
-const config = require("../config");
 
 async function single(id) {
   return Producer.getSingle(id);
@@ -9,8 +8,8 @@ async function all() {
   return Producer.getAll();
 }
 
-async function paged(page = 1) {
-  return Producer.getPage(page, config.pageSize);
+async function paged(page = 1, pageSize = 10) {
+  return Product.getPage(page, pageSize);
 }
 
 async function insert(data) {

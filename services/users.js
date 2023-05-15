@@ -1,5 +1,4 @@
 const User = require("../respositories/user");
-const config = require("../config");
 
 async function single(id) {
   return User.getSingle(id);
@@ -9,8 +8,8 @@ async function all() {
   return User.getAll();
 }
 
-async function paged(page = 1) {
-  return User.getPage(page, config.pageSize);
+async function paged(page = 1, pageSize = 10) {
+  return Product.getPage(page, pageSize);
 }
 
 async function insert(data) {

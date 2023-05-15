@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const category_router = express.Router({ mergeParams: true });
 const categories = require("../../../services/categories");
 
 /**
@@ -11,10 +11,65 @@ const categories = require("../../../services/categories");
 
 /**
  * @swagger
+ * /api/v1/categories:
+ *   get:
+ *     summary: Lists all the catigories
+ *     tags:
+ *      - Categories
+ *     responses:
+ *       200:
+ *         description: The list of the catigories
+ */
+category_router.get("/", function (req, res, next) {
+  try {
+    categories.all().then((data) => {
+      res.json(data);
+    });
+  } catch (err) {
+    console.error(`Error while getting categories `, err.message);
+    next(err);
+  }
+});
+
+/**
+ * @swagger
+ * /api/v1/categories/paging:
+ *   get:
+ *     summary: Lists paging of the catigories
+ *     tags:
+ *      - Categories
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: The number of page
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *         description: The number of total item per page
+ *     responses:
+ *       200:
+ *         description: The list paging of the catigories
+ */
+category_router.get("/paging", function (req, res, next) {
+  try {
+    categories.paged(req.query.page, req.query.pageSize).then((data) => {
+      res.json(data);
+    });
+  } catch (err) {
+    console.error(`Error while getting categories `, err.message);
+    next(err);
+  }
+});
+
+/**
+ * @swagger
  * /api/v1/categories/{id}:
  *   get:
  *     summary: Get the category by id
- *     tags: 
+ *     tags:
  *      - Categories
  *     parameters:
  *       - in: path
@@ -27,7 +82,7 @@ const categories = require("../../../services/categories");
  *       200:
  *         description: The category response by id
  */
-router.get("/:id", function (req, res, next) {
+category_router.get("/:id", function (req, res, next) {
   try {
     let id = req.params.id;
     categories.single(id).then((data) => {
@@ -42,71 +97,28 @@ router.get("/:id", function (req, res, next) {
 /**
  * @swagger
  * /api/v1/categories:
- *   get:
- *     summary: Lists all the catigories
- *     tags: 
- *      - Categories
- *     responses:
- *       200:
- *         description: The list of the catigories
- */
-router.get("/", function (req, res, next) {
-  try {
-    categories.all().then((data) => {
-      res.json(data);
-    });
-  } catch (err) {
-    console.error(`Error while getting categories `, err.message);
-    next(err);
-  }
-});
-
-/**
- * @swagger
- * /api/v1/categories:
- *   get:
- *     summary: Lists paging of the catigories
- *     tags: 
- *      - Categories
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *         description: The number of page
- *     responses:
- *       200:
- *         description: The list paging of the catigories
- */
-router.get("/", function (req, res, next) {
-  try {
-    categories.paged(req.query.page).then((data) => {
-      res.json(data);
-    });
-  } catch (err) {
-    console.error(`Error while getting categories `, err.message);
-    next(err);
-  }
-});
-
-/**
- * @swagger
- * /api/v1/categories:
  *   post:
  *     summary: Create a new category
- *     tags: 
+ *     tags:
  *      - Categories
- *     parameters:
- *       - name: CatName
- *         description: The category name.
- *         in: formData
- *         required: true
- *         type: string
+ *     requestBody:
+ *       required: true
+ *       description: Category object.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             properties:
+ *               CatName:
+ *                 type: tring
+ *           examples:
+ *             Category object example:
+ *               sumary: Category object example
+ *               value: {CatName: "Category name"}
  *     responses:
  *       200:
  *         description: The category response by id
  */
-router.post("/", function (req, res, next) {
+category_router.post("/", function (req, res, next) {
   try {
     categories.insert(req.body).then((data) => {
       res.json(data);
@@ -120,9 +132,9 @@ router.post("/", function (req, res, next) {
 /**
  * @swagger
  * /api/v1/categories/{id}:
- *   post:
+ *   put:
  *     summary: Update the category by id
- *     tags: 
+ *     tags:
  *      - Categories
  *     parameters:
  *       - in: path
@@ -131,16 +143,24 @@ router.post("/", function (req, res, next) {
  *           type: string
  *         required: true
  *         description: The category id
- *       - name: CatName
- *         description: Category's name.
- *         in: formData
- *         required: true
- *         type: string
+ *     requestBody:
+ *       required: true
+ *       description: Category object.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             properties:
+ *               CatName:
+ *                 type: tring
+ *           examples:
+ *             Category object example:
+ *               sumary: Category object example
+ *               value: {CatName: "Category name"}
  *     responses:
  *       200:
- *         description: The category id
+ *         description: The category response by id
  */
-router.put("/:id", function (req, res, next) {
+category_router.put("/:id", function (req, res, next) {
   try {
     let id = req.params.id;
     categories.update(id, req.body).then((data) => {
@@ -157,7 +177,7 @@ router.put("/:id", function (req, res, next) {
  * /api/v1/categories/{id}:
  *   delete:
  *     summary: Delete the category by id
- *     tags: 
+ *     tags:
  *      - Categories
  *     parameters:
  *       - in: path
@@ -170,7 +190,7 @@ router.put("/:id", function (req, res, next) {
  *       200:
  *         description: The category id
  */
-router.delete("/:id", function (req, res, next) {
+category_router.delete("/:id", function (req, res, next) {
   try {
     let id = req.params.id;
     categories.remove(id).then((data) => {
@@ -182,4 +202,4 @@ router.delete("/:id", function (req, res, next) {
   }
 });
 
-module.exports = router;
+module.exports = category_router;

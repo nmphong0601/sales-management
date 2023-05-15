@@ -22,7 +22,7 @@ class Respositiory {
   }
 
   getPage(page, pageSize, where = "", params = []){
-    return this.dao.page(page, pageSize, (where = ""), (params = []));
+    return this.dao.getPage(page, pageSize, where, params);
   }
 
   add(data) {

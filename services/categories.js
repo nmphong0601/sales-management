@@ -1,5 +1,4 @@
 const Category = require("../respositories/category");
-const config = require("../config");
 
 async function single(id) {
   return Category.getSingle(id);
@@ -9,8 +8,8 @@ async function all() {
   return Category.getAll();
 }
 
-async function paged(page = 1) {
-  return Category.getPage(page, config.pageSize);
+async function paged(page = 1, pageSize = 10) {
+  return Category.getPage(page, pageSize);
 }
 
 async function insert(data) {

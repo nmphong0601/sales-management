@@ -7,10 +7,9 @@ class AppDAO {
       //cần truyền vào một đường dẫn đến file csdl sqlite để khởi tạo một kết nối đến file để bắt đầu đọc ghi
       if (err) {
         console.log("Could not connect to database", err); //Kết nối chưa thành công, có lỗi
-      } else {
-        console.log("Connected to database"); //Đã kết nối thành công và sẵn sàng để đọc ghi DB
       }
     });
+    
     this.table = table;
     this.key = key || "Id";
 
@@ -112,8 +111,8 @@ class AppDAO {
     });
   }
 
-  page(page, pageSize, where = "", params = []) {
-    const offset = (page - 1) * pageSize;
+  getPage(page, pageSize, where = "", params = []) {
+    const offset = (Number(page) - 1) * Number(pageSize);
     const sql = `SELECT * FROM ${this.table} ${
       where !== "" ? `WHERE ${where}` : ""
     } LIMIT ?,?`;

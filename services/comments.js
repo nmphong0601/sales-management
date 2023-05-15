@@ -1,5 +1,4 @@
 const Comment = require("../respositories/comment");
-const config = require("../config");
 
 async function single(id) {
   return Comment.getSingle(id);
@@ -9,8 +8,8 @@ async function all() {
   return Comment.getAll();
 }
 
-async function paged(page = 1) {
-  return Comment.getPage(page, config.pageSize);
+async function paged(page = 1, pageSize = 10) {
+  return Comment.getPage(page, pageSize);
 }
 
 async function insert(data) {
