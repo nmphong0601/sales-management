@@ -154,7 +154,7 @@ product_router.post("/", function (req, res, next) {
  * @swagger
  * /api/v1/products/{id}:
  *   put:
- *     summary: Update the category by id
+ *     summary: Update the product by id
  *     tags:
  *      - Products
  *     parameters:
@@ -163,7 +163,7 @@ product_router.post("/", function (req, res, next) {
  *         schema:
  *           type: string
  *         required: true
- *         description: The category id
+ *         description: The product id
  *     requestBody:
  *       required: true
  *       description: Product object.
@@ -200,7 +200,7 @@ product_router.post("/", function (req, res, next) {
  *               value: {ProName: "Product name", TinyDes: "", FullDes: "", Price: 1000000, ProducerID: 1, Quantity: 1000, View: 50, MadeIn: "Vietnam", CatID: 1, ReceipDate: "05/06/2023", Orders: 60}
  *     responses:
  *       200:
- *         description: The category response by id
+ *         description: The product response by id
  */
 product_router.put("/:id", function (req, res, next) {
   try {
@@ -209,7 +209,7 @@ product_router.put("/:id", function (req, res, next) {
       res.json(data);
     });
   } catch (err) {
-    console.error(`Error while update category `, err.message);
+    console.error(`Error while update product `, err.message);
     next(err);
   }
 });
@@ -239,7 +239,7 @@ product_router.delete("/:id", function (req, res, next) {
       res.json(data);
     });
   } catch (err) {
-    console.error(`Error while delete category `, err.message);
+    console.error(`Error while delete product `, err.message);
     next(err);
   }
 });

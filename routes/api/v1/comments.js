@@ -11,6 +11,28 @@ const comments = require("../../../services/comments");
 
 /**
  * @swagger
+ * /api/v1/comments:
+ *   get:
+ *     summary: Lists all the comments
+ *     tags:
+ *      - Comments
+ *     responses:
+ *       200:
+ *         description: The list of the comments
+ */
+comment_router.get("/", function (req, res, next) {
+  try {
+    comments.all().then((data) => {
+      res.json(data);
+    });
+  } catch (err) {
+    console.error(`Error while getting comments `, err.message);
+    next(err);
+  }
+});
+
+/**
+ * @swagger
  * /api/v1/comments/paging:
  *   get:
  *     summary: Lists paging of the comments
@@ -34,28 +56,6 @@ const comments = require("../../../services/comments");
 comment_router.get("/paging", function (req, res, next) {
   try {
     comments.paged(req.query.page, req.query.pageSize).then((data) => {
-      res.json(data);
-    });
-  } catch (err) {
-    console.error(`Error while getting comments `, err.message);
-    next(err);
-  }
-});
-
-/**
- * @swagger
- * /api/v1/comments:
- *   get:
- *     summary: Lists all the comments
- *     tags:
- *      - Comments
- *     responses:
- *       200:
- *         description: The list of the comments
- */
-comment_router.get("/", function (req, res, next) {
-  try {
-    comments.all().then((data) => {
       res.json(data);
     });
   } catch (err) {

@@ -5,11 +5,11 @@ class Rating extends Respositiory {
     return this.createTable(`
           [Id] bigint NOT NULL
         , [ProID] int NOT NULL
+        , [One] int NULL
         , [Two] int NULL
         , [Three] int NULL
         , [Four] int NULL
         , [Five] int NULL
-        , [One] int NULL
         , [Rate] int NULL`);
   }
 }
