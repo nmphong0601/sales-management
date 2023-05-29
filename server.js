@@ -70,3 +70,6 @@ app.use(
 app.use(function(req, res){
     res.status(404);
 });
+
+// Export the Express API
+module.exports = app
