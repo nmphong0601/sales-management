@@ -6,5 +6,12 @@
            "use": "@now/node"
        }
    ],
-   "rewrites": [{ "source": "/api/v1/(.*)", "destination": "/routes/api/v1/index.js" }]
+   "routes": [
+    {
+      // Specify which paths will route to a destination using a regex
+      "src": "/(.*)",
+      // Specify the paths' destination
+      "dest": "server.js"
+    }
+  ]
 }
