@@ -4,8 +4,8 @@ async function single(id) {
   return Producer.getSingle(id);
 }
 
-async function all() {
-  return Producer.getAll();
+async function all(where = "", params = []) {
+  return Producer.getAll(where, params);
 }
 
 async function paged(page = 1, pageSize = 10) {

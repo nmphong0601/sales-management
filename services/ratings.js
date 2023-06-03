@@ -4,8 +4,8 @@ async function single(id) {
   return Rating.getSingle(id);
 }
 
-async function all() {
-  return Rating.getAll();
+async function all(where = "", params = []) {
+  return Rating.getAll(where, params);
 }
 
 async function paged(page = 1, pageSize = 10) {

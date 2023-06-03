@@ -1,4 +1,4 @@
-const Respositiory = require("./services");
+const Respositiory = require("./respository");
 
 class User extends Respositiory {
   createCategories() {
@@ -11,7 +11,8 @@ class User extends Respositiory {
         , [f_DOB] datetime NOT NULL
         , [f_Permission] int NOT NULL
         , [f_Address] nvarchar(255) NULL COLLATE NOCASE
-        , [f_Phone] nvarchar(20) NULL COLLATE NOCASE`);
+        , [f_Phone] nvarchar(20) NULL COLLATE NOCASE
+        , [f_Salt] nvarchar(255) NULL COLLATE NOCASE`);
   }
 }
 

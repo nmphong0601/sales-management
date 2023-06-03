@@ -4,8 +4,8 @@ async function single(id) {
   return Comment.getSingle(id);
 }
 
-async function all() {
-  return Comment.getAll();
+async function all(where = "", params = []) {
+  return Comment.getAll(where, params);
 }
 
 async function paged(page = 1, pageSize = 10) {

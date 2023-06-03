@@ -5,7 +5,7 @@ const Statuses = require("../../../services/statuses");
 /**
  * @swagger
  * tags:
- *   name: Statues
+ *   name: Statuses
  *   description: The statuses managing API
  */
 

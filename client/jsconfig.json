@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "ES6",
+    "target": "es6",
+    "baseUrl": "./src",
+    "allowJs": true,
+    "noEmit": true,
+    "paths": {
+      "containers/*": ["./containers/*/index"],
+      "components/*": ["./components/*/index"],
+      "common/*": ["./common/*"],
+      "pages/*": ["./pages/*"],
+      "services/*": ["./services/*"],
+      "*": [
+        "node_modules/*/dist/index",
+        "node_modules/*/index",
+        "node_modules/*"
+      ]
+    }
+  }
+}

@@ -21,7 +21,7 @@ class Respositiory {
     return this.dao.all(where, params);
   }
 
-  getPage(page, pageSize, where = "", params = []){
+  getPage(page, pageSize, where = "", params = []) {
     return this.dao.getPage(page, pageSize, where, params);
   }
 
@@ -35,6 +35,10 @@ class Respositiory {
 
   delete(id) {
     return this.dao.delete(id);
+  }
+
+  runQuery(sql) {
+    return this.dao.runQuery(sql);
   }
 }
 

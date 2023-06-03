@@ -4,8 +4,8 @@ async function single(id) {
   return Category.getSingle(id);
 }
 
-async function all() {
-  return Category.getAll();
+async function all(where = "", params = []) {
+  return Category.getAll(where, params);
 }
 
 async function paged(page = 1, pageSize = 10) {

@@ -4,12 +4,12 @@ async function single(id) {
   return User.getSingle(id);
 }
 
-async function all() {
-  return User.getAll();
+async function all(where = "", params = []) {
+  return User.getAll(where, params);
 }
 
 async function paged(page = 1, pageSize = 10) {
-  return Product.getPage(page, pageSize);
+  return User.getPage(page, pageSize);
 }
 
 async function insert(data) {
@@ -24,6 +24,10 @@ async function remove(id) {
   return User.delete(id);
 }
 
+async function runQuery(sql) {
+  return User.runQuery(sql);
+}
+
 module.exports = {
   single,
   all,
@@ -31,4 +35,5 @@ module.exports = {
   insert,
   update,
   remove,
+  runQuery,
 };

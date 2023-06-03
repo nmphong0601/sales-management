@@ -9,7 +9,7 @@ class AppDAO {
         console.log("Could not connect to database", err); //Kết nối chưa thành công, có lỗi
       }
     });
-    
+
     this.table = table;
     this.key = key || "Id";
 
@@ -56,7 +56,11 @@ class AppDAO {
           reject(err);
         } else {
           //Trường hợp chạy query thành công
-          resolve({ id: this.lastID }); //Trả về kết quả là một object có id lấy từ DB.
+          if (this.lastID !== 0) {
+            resolve({ inserted: this.lastID }); //Trả về kết quả là một object có id lấy từ DB.
+          } else {
+            resolve({ changed: this.changes });
+          }
         }
       });
     });

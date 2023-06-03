@@ -4,8 +4,8 @@ async function single(id) {
   return Product.getSingle(id);
 }
 
-async function all() {
-  return Product.getAll();
+async function all(where = "", params = []) {
+  return Product.getAll(where, params);
 }
 
 async function paged(page = 1, pageSize = 10) {
