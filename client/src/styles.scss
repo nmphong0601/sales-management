@@ -6,79 +6,33 @@
 * {
   margin: 0;
   padding: 0;
+  outline: 0;
+  appearance: none;
+  border: 0;
+  text-decoration: none;
+  list-style: none;
   box-sizing: border-box;
   font-family: "Roboto", sans-serif;
 }
-:root {
-  --background-primary: #1c2135;
-  --background-secondary: #191d30;
-  --background-color3: #ededed;
-  --background-color4: #cad7fda4;
-  --primary-color: #f34242;
-  --secondary-color: #ce2222;
-  --base-color: #ffffff;
-  --Border-color: #3f0097;
-  --one-use-color: #3f0097;
-  --two-use-color: #5500cb;
+
+html {
+  font-size: 16px;
 }
 
 body {
-  background-color: var(--background-primary);
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-h1 {
-  color: var(--secondary-color);
-  background-color: var(--background-primary);
-}
-
-svg {
-  color: var(--base-color);
-  width: 30px;
-  height: 30px;
-}
-
-.main-container {
-  display: flex;
   width: 100vw;
-  position: relative;
-  top: 80px;
-  z-index: 1;
-  color: var(--base-color);
-}
-
-.nav-container {
-  height: calc(100vh - 80px);
-  width: 250px;
-  position: relative;
-  overflow-y: scroll;
+  height: 100vh;
+  max-width: 100%;
+  user-select: none;
   overflow-x: hidden;
-  transition: all 0.5s ease-in-out;
-  flex-shrink: 0;
+  @apply text-nmp-base bg-nmp-dark-primary;
 }
 
-.nav-container::-webkit-scrollbar {
-  display: none;
-}
-
-.main {
-  height: calc(100vh - 80px);
-  width: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding: 40px 30px 30px 30px;
-}
-
-body::-webkit-scrollbar-thumb, .main::-webkit-scrollbar-thumb {
-  background-image:
-        linear-gradient(to bottom, rgb(152, 163, 194), rgb(72, 77, 88));
-}
-body::-webkit-scrollbar, .main::-webkit-scrollbar {
-  width: 5px;
-}
-body::-webkit-scrollbar-track, .main::-webkit-scrollbar-track {
-  background-color: #9e9e9eb2;
+/* ------------------------------------------------------------------ */
+/* i. Main
+/* ------------------------------------------------------------------ */
+main {
+  @apply mt-4;
 }
 
 /* ------------------------------------------------------------------ */
@@ -88,15 +42,13 @@ body::-webkit-scrollbar-track, .main::-webkit-scrollbar-track {
 footer {
    padding-top: 20px;
    margin-bottom: 20px;
-   color: var(--base-color);
-   background-color: var(--background-secondary);
    font-size: 14px;
    text-align: center;
    position: relative;
    z-index: 1;
 }
 
-footer a, footer a:visited { color: var(--primary-color); }
+footer a, footer a:visited {  }
 footer a:hover, footer a:focus { color: #fff; }
 
 /* copyright */
@@ -117,7 +69,6 @@ footer .copyright li:before {
     content: "\2022";
     padding-left: 10px;
     padding-right: 10px;
-    color: var(--primary-color);
 }
 footer .copyright  li:first-child:before {
     display: none;
@@ -177,7 +128,7 @@ footer .social-links li:first-child { margin-left: 0; }
     transform: translateY(-50%);
   }
 }
-#go-top a:hover { background-color: var(--primary-color); }
+#go-top a:hover { }
 
 .social .btn:first-child{
    margin-right: 30px;

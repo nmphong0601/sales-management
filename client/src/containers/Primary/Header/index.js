@@ -1,33 +1,37 @@
-import { AiOutlineSearch } from "@react-icons/all-files/ai/AiOutlineSearch";
-import { AiFillBell } from "@react-icons/all-files/ai/AiFillBell";
+import {
+  MdMail,
+  MdSettings,
+  MdNotifications,
+  MdArrowForwardIos,
+} from "react-icons/md";
 import styles from "./Index.module.scss";
 
-const Header = () => {
+const Header = (props) => {
+  const { className, ...otherProps } = props;
   return (
-    <header>
-      <div className={styles["logo-container"]}>
-        <div className={styles.logo}>Sales Management</div>
-        <div className={styles.menu}>
-          <div className="menu-icon"></div>
-          <div className="menu-icon"></div>
-          <div className="menu-icon"></div>
-        </div>
-      </div>
-      <div className={styles["search-bar"]}>
-        <input type="text" placeholder="Search" />
-        <div className="search-btn">
-          <AiOutlineSearch />
-        </div>
-      </div>
-      <div className={styles["message"]}>
-        <div className={styles.circle}></div>
-        <AiFillBell />
-        <div className={styles["profile-picture"]}>
-          <img
-            src={"/assets/images/avatar.png"}
-            style={{ height: "40px" }}
-            alt="profile-picture"
-          />
+    <header className={`p-2 ${className || ""}`} {...otherProps}>
+      <div className={styles.right}>
+        <div className="flex justify-end items-center gap-4 bg-nmp-light">
+          <div className="flex gap-2">
+            <button className={`relative`}>
+              <MdSettings />
+            </button>
+            <button className={`relative ${styles["notificate-circle"]}`}>
+              <MdMail />
+            </button>
+            <button className={`relative ${styles["notificate-circle"]}`}>
+              <MdNotifications />
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <img
+              src="/assets/images/avatar.png"
+              width={28}
+              height={28}
+              alt="profile photo"
+            />
+            <MdArrowForwardIos className="rotate-90 cursor-pointer" size={12} />
+          </div>
         </div>
       </div>
     </header>

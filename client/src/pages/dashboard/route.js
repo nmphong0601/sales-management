@@ -1,7 +1,7 @@
 import { lazy } from "react";
 
 export default {
-  path: "/home",
+  path: "/",
   exac: true,
   public: true,
   component: lazy(() => import(".")),
