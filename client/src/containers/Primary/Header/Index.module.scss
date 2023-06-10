@@ -1,6 +1,16 @@
+header {
+    h3 {
+        @apply sm:block hidden;
+    }
+}
+
 .notificate-circle {
     &:before{
         @apply absolute right-0 content-[''] bg-nmp-primary w-1.5 h-1.5 z-10 rounded-full animate-ping;
     }
+}
+
+.search-bar {
+    @apply flex lg:hidden items-center bg-nmp-form p-2 rounded-full border border-nmp-line-dark focus-within:border focus-within:border-solid focus-within:border-nmp-primary;
 }
 

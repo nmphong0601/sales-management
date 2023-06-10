@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { MdClose, MdWindow, MdPerson, MdLogout, MdSearch } from "react-icons/md";
+import {
+  MdClose,
+  MdWindow,
+  MdPerson,
+  MdLogout,
+  MdSearch,
+  MdChevronRight,
+} from "react-icons/md";
 
 import styles from "./Index.module.scss";
 
@@ -25,14 +32,17 @@ const navigates = [
 
 const Sidebar = (props) => {
   const { className, ...otherProps } = props;
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <aside
-      className={`flex flex-col gap-4 p-2 ${className || ""}`}
+      className={`${styles["sidebar"]} ${className || ""} ${
+        isOpen ? "translate-x-0" : ""
+      }`}
       {...otherProps}
     >
-      <div className="flex items-center">
+      <div className="lg:flex items-center hidden">
         <img
           src={"/assets/images/metalic-logo.png"}
           width={48}
@@ -41,19 +51,19 @@ const Sidebar = (props) => {
         />
         <h2>Sales Management</h2>
       </div>
-      <div className="flex items-center bg-nmp-form p-2 rounded-full border border-nmp-line-dark">
-        <input className="w-full bg-transparent" placeholder="Search..."/>
-        <MdSearch className="text-nmp-white" size={24}/>
+      <div className={`${styles["search-bar"]}`}>
+        <input className="w-full bg-transparent" placeholder="Search..." />
+        <MdSearch className="text-nmp-white" size={24} />
       </div>
-      <div className="">
+      <div className="relative h-full">
         {navigates.map((nav, index) => {
           return (
             <Link
               key={index}
               to={nav.uri}
               onClick={(e) => setActive(index)}
-              className={`flex shrink-0 text-nmp-light ml-4 gap-4 items-center relative h-10 transition-all duration-300 ease-linear last:absolute last:bottom-0 ${
-                active === index ? "active" : ""
+              className={`${styles["nav"]} ${
+                active === index ? styles["active"] : ""
               }`}
             >
               {nav.icon}
@@ -62,6 +72,14 @@ const Sidebar = (props) => {
           );
         })}
       </div>
+      <button
+        className={`absolute w-8 h-16 bg-nmp-primary left-full top-1/4 rounded-tr-xl rounded-br-xl lg:hidden`}
+        onClick={(e) => setIsOpen(!isOpen)}
+      >
+        <MdChevronRight
+          className={`w-full h-full ${isOpen ? "rotate-180" : ""}`}
+        />
+      </button>
     </aside>
   );
 };
