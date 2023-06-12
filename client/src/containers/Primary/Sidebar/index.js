@@ -26,7 +26,7 @@ const navigates = [
   {
     name: "Logout",
     icon: <MdLogout className={styles.icon} />,
-    uri: "/",
+    uri: "/account/logout",
   },
 ];
 
@@ -53,7 +53,7 @@ const Sidebar = (props) => {
       </div>
       <div className={`${styles["search-bar"]}`}>
         <input className="w-full bg-transparent" placeholder="Search..." />
-        <MdSearch className="text-nmp-white" size={24} />
+        <MdSearch className="text-nmp-white" size={20} />
       </div>
       <div className="relative h-full">
         {navigates.map((nav, index) => {

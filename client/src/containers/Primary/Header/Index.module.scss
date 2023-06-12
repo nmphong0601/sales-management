@@ -11,6 +11,6 @@ header {
 }
 
 .search-bar {
-    @apply flex lg:hidden items-center bg-nmp-form p-2 rounded-full border border-nmp-line-dark focus-within:border focus-within:border-solid focus-within:border-nmp-primary;
+    @apply flex lg:hidden items-center bg-nmp-form px-2 rounded-full border border-solid border-nmp-line-dark focus-within:border-nmp-primary;
 }
 

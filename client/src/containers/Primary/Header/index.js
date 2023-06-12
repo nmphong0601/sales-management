@@ -4,47 +4,75 @@ import {
   MdSettings,
   MdNotifications,
   MdArrowForwardIos,
-} from "react-icons/md";
-import styles from "./Index.module.scss";
+  MdAccountCircle,
+  MdLogout,
+} from 'react-icons/md';
+import styles from './Index.module.scss';
+import { Link } from '../../../../node_modules/react-router-dom/dist/index';
+import { useState } from 'react';
 
 const Header = (props) => {
   const { className, ...otherProps } = props;
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
+
   return (
-    <header className={`p-2 ${className || ""}`} {...otherProps}>
-      <div className="flex justify-between lg:justify-end">
+    <header className={`p-2 ${className || ''}`} {...otherProps}>
+      <div className="flex justify-between lg:justify-end gap-8">
         <div className="lg:hidden flex justify-start items-center shrink-0">
           <img
-            src={"/assets/images/metalic-logo.png"}
+            src={'/assets/images/metalic-logo.png'}
             width={32}
             height={32}
             alt="metalic-logo"
           />
           <h3>Sales Management</h3>
         </div>
-        <div className={`${styles["search-bar"]}`}>
+        <div className={`${styles['search-bar']}`}>
           <input className="w-full bg-transparent" placeholder="Search..." />
-          <MdSearch className="text-nmp-white" size={24} />
+          <MdSearch className="text-nmp-white" size={20} />
         </div>
-        <div className="flex justify-end items-center gap-4 bg-nmp-light">
+        <div className="flex justify-end items-center gap-2 bg-nmp-light">
           <div className="flex gap-2">
             <button className={`relative`}>
               <MdSettings />
             </button>
-            <button className={`relative ${styles["notificate-circle"]}`}>
+            <button className={`relative ${styles['notificate-circle']}`}>
               <MdMail />
             </button>
-            <button className={`relative ${styles["notificate-circle"]}`}>
+            <button className={`relative ${styles['notificate-circle']}`}>
               <MdNotifications />
             </button>
           </div>
-          <div className="flex items-center gap-2">
+          <div
+            className="relative flex items-center gap-2 shrink-0"
+            onClick={(e) => setIsOpenMenu(!isOpenMenu)}
+          >
             <img
               src="/assets/images/avatar.png"
               width={28}
               height={28}
               alt="profile photo"
+              className="bg-nmp-white rounded-full"
             />
             <MdArrowForwardIos className="rotate-90 cursor-pointer" size={12} />
+            {isOpenMenu && (
+              <div className="absolute min-w-[240px] top-full right-0 bg-nmp-dark-secondary w-max border border-solid border-nmp-primary rounded-xl">
+                <ul className="w-full">
+                  <li className="hover:bg-nmp-primary p-2 rounded-xl">
+                    <Link to={'/account/profile'} className="flex items-center">
+                      <MdAccountCircle className="mr-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </li>
+                  <li className="hover:bg-nmp-primary p-2 rounded-xl">
+                    <Link to={'/account/logout'} className="flex items-center">
+                      <MdLogout className="mr-4" />
+                      <span>Logout</span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </div>
