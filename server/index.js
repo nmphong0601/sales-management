@@ -1,10 +1,19 @@
 // Create express app
 var express = require("express");
+var fs = require("fs");
+const https = require("https");
 var bodyParser = require("body-parser");
 var swaggerJsdoc = require("swagger-jsdoc");
 var swaggerUi = require("swagger-ui-express");
 
-const cors = require("cors");
+const v1Router = require("./routes/api/v1");
+
+var key = fs.readFileSync(__dirname + "/certs/cert.key");
+var cert = fs.readFileSync(__dirname + "/certs/cert.crt");
+const certOptions = {
+  key: key,
+  cert: cert,
+};
 
 const options = {
   definition: {
@@ -46,25 +55,12 @@ const options = {
   },
   apis: ["./routes/api/v1/*.js", "./routes/api/v2/*.js"],
 };
-var bodyParser = require("body-parser");
+
+const cors = require("cors");
 var app = express();
 
-const v1Router = require("./routes/api/v1");
-
-// Server port
-var HTTP_PORT = 8000;
-// Start server
-app.listen(HTTP_PORT, () => {
-  console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT));
-});
-
 // Setting up CORS
-app.use(
-  express.urlencoded(),
-  cors({
-    origin: "http://localhost:8000",
-  })
-);
+app.use(express.urlencoded(), cors());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -94,3 +90,14 @@ app.use(
 app.use(function (req, res) {
   res.status(404);
 });
+
+var server = https.createServer(certOptions, app);
+
+// Server port
+var HTTP_PORT = 8000;
+// Start server
+server.listen(HTTP_PORT, () => {
+  console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT));
+});
+
+module.exports = server;
