@@ -1,8 +1,8 @@
 import { lazy } from "react";
 
 export default {
-  path: "/",
+  path: '/dashboard',
   exac: true,
   public: true,
-  component: lazy(() => import(".")),
+  component: lazy(() => import('.')),
 };

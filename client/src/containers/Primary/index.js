@@ -1,20 +1,15 @@
+import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { useEffect } from 'react';
 
 const PrimaryLayout = ({ children, ...props }) => {
   const navigate = useNavigate();
-  const signOut = (e) => {
-    e.preventDefault();
-    navigate('/auth/login');
-  };
 
   useEffect(() => {
-    const authorizationData = JSON.parse(
-      localStorage.getItem('authorizationData')
-    );
-    if (!authorizationData) {
+    const userInfor = JSON.parse(localStorage.getItem('userInfor'));
+    if (!userInfor) {
       navigate('/auth/login');
     }
   }, []);
@@ -24,7 +19,7 @@ const PrimaryLayout = ({ children, ...props }) => {
       <Sidebar className="bg-nmp-dark-secondary rounded-xl border border-solid border-nmp-primary" />
       <div className="col-span-3">
         <Header className="bg-nmp-dark-secondary rounded-xl border border-solid border-nmp-primary" />
-        <div className="container">
+        <div className="container mt-10">
           <Outlet />
         </div>
       </div>

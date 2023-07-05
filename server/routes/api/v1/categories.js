@@ -55,9 +55,25 @@ category_router.get("/", function (req, res, next) {
  */
 category_router.get("/paging", function (req, res, next) {
   try {
-    categories.paged(req.query.page, req.query.pageSize).then((data) => {
-      res.json(data);
-    });
+    categories
+      .paged(
+        req.query.page,
+        req.query.pageSize,
+        req.query.where,
+        req.query.params
+      )
+      .then((data) => {
+        res.json({
+          pagingInfor: {
+            page: Number(req.query.page),
+            pageSize: Number(req.query.pageSize),
+            search: req.query.where,
+            params: req.query.params,
+            totalItems: Number(data[0].totalRows),
+          },
+          items: data,
+        });
+      });
   } catch (err) {
     console.error(`Error while getting categories `, err.message);
     next(err);

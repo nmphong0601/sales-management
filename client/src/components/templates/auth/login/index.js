@@ -1,7 +1,35 @@
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+
 import Button from 'components/atoms/Button';
 import Input from 'components/atoms/Input';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from 'actions/userActions';
+import { useEffect } from 'react';
+
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.user.userInfor);
+  const {
+    register,
+    unregister,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/dashboard');
+    }
+  }, [userInfo]);
+
+  const onSubmit = (data) => {
+    dispatch(login(data));
+  };
+
   return (
     <section className="w-screen h-screen">
       <div className="relative container w-full h-full">
@@ -12,9 +40,18 @@ const Login = () => {
             height={128}
             alt="metalic-logo"
           />
-          <form className="flex flex-col gap-4 items-center">
-            <Input placeholder="Username..." />
-            <Input placeholder="Password..." />
+          <form
+            className="flex flex-col gap-4 items-center"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <Input
+              placeholder="Username..."
+              {...register('user_name', { required: true })}
+            />
+            <Input
+              placeholder="Password..."
+              {...register('password', { required: true })}
+            />
             <Button type="submit">Login</Button>
           </form>
         </div>

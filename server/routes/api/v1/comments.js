@@ -55,9 +55,25 @@ comment_router.get("/", function (req, res, next) {
  */
 comment_router.get("/paging", function (req, res, next) {
   try {
-    comments.paged(req.query.page, req.query.pageSize).then((data) => {
-      res.json(data);
-    });
+    comments
+      .paged(
+        req.query.page,
+        req.query.pageSize,
+        req.query.where,
+        req.query.params
+      )
+      .then((data) => {
+        res.json({
+          pagingInfor: {
+            page: Number(req.query.page),
+            pageSize: Number(req.query.pageSize),
+            search: req.query.where,
+            params: req.query.params,
+            totalItems: Number(data[0].totalRows),
+          },
+          items: data,
+        });
+      });
   } catch (err) {
     console.error(`Error while getting comments `, err.message);
     next(err);

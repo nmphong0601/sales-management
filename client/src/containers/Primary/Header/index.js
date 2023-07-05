@@ -7,13 +7,20 @@ import {
   MdAccountCircle,
   MdLogout,
 } from 'react-icons/md';
+import { useNavigate, Link } from 'react-router-dom';
 import styles from './Index.module.scss';
-import { Link } from '../../../../node_modules/react-router-dom/dist/index';
 import { useState } from 'react';
 
 const Header = (props) => {
+  const navigate = useNavigate();
   const { className, ...otherProps } = props;
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+
+  const signOut = (e) => {
+    e.preventDefault();
+    localStorage.removeItem('userInfor');
+    navigate('/auth/login');
+  };
 
   return (
     <header className={`p-2 ${className || ''}`} {...otherProps}>
@@ -65,7 +72,10 @@ const Header = (props) => {
                     </Link>
                   </li>
                   <li className="hover:bg-nmp-primary p-2 rounded-xl">
-                    <Link to={'/account/logout'} className="flex items-center">
+                    <Link
+                      className="flex items-center"
+                      onClick={(e) => signOut(e)}
+                    >
                       <MdLogout className="mr-4" />
                       <span>Logout</span>
                     </Link>

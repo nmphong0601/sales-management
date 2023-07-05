@@ -55,8 +55,22 @@ producers_router.get("/", function (req, res, next) {
  */
 producers_router.get("/paging", function (req, res, next) {
   try {
-    Producers.paged(req.query.page, req.query.pageSize).then((data) => {
-      res.json(data);
+    Producers.paged(
+      req.query.page,
+      req.query.pageSize,
+      req.query.where,
+      req.query.params
+    ).then((data) => {
+      res.json({
+        pagingInfor: {
+          page: Number(req.query.page),
+          pageSize: Number(req.query.pageSize),
+          search: req.query.where,
+          params: req.query.params,
+          totalItems: Number(data[0].totalRows),
+        },
+        items: data,
+      });
     });
   } catch (err) {
     console.error(`Error while getting producers `, err.message);

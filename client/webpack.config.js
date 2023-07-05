@@ -1,9 +1,10 @@
 const webpack = require("webpack");
 const fs = require("fs");
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const InterpolateHtmlPlugin = require("interpolate-html-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Dotenv = require('dotenv-webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const InterpolateHtmlPlugin = require('interpolate-html-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config = {
   entry: ['webpack/hot/dev-server', './src/index.js'],
@@ -19,6 +20,8 @@ const config = {
       common: path.resolve(__dirname, 'src/common/'),
       pages: path.resolve(__dirname, 'src/pages/'),
       services: path.resolve(__dirname, 'src/services/'),
+      actions: path.resolve(__dirname, 'src/actions/'),
+      reducers: path.resolve(__dirname, 'src/reducers/'),
       process: 'process/browser',
     },
   },
@@ -80,15 +83,16 @@ const config = {
     //     '</title></head><body><div id="app"></div></body></html>',
     //   filename: "index.html",
     // }),
+    new Dotenv(),
     new HtmlWebpackPlugin({
       title: 'FE App',
       template: path.resolve(__dirname, 'public', 'index.html'),
       filename: 'index.html',
     }),
-    new InterpolateHtmlPlugin({ PUBLIC_URL: '/public' }),
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
     new MiniCssExtractPlugin(),
+    new InterpolateHtmlPlugin({ PUBLIC_URL: '/public' }),
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
   ],
   optimization: {
     runtimeChunk: 'single',

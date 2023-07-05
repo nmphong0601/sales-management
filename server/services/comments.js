@@ -8,8 +8,8 @@ async function all(where = "", params = []) {
   return Comment.getAll(where, params);
 }
 
-async function paged(page = 1, pageSize = 10) {
-  return Comment.getPage(page, pageSize);
+async function paged(page = 1, pageSize = 10, where = "", params = []) {
+  return Comment.getPage(page, pageSize, where, params);
 }
 
 async function insert(data) {

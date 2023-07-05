@@ -12,35 +12,24 @@ class AppDAO {
 
     this.table = table;
     this.key = key || "Id";
-
-    this.columns = this.db.all(
-      `SELECT NAME as COLUMN_NAME, DFLT_VALUE as COLUMN_DEFAULT, TYPE as DATA_TYPE FROM pragma_table_info('${this.table}')`,
-      [],
-      function (err, rows) {
-        if (err) {
-          return console.log(err.message);
-        }
-        // this.columns = rows;
-        return rows;
-      }
-    );
   }
 
-  getColumns() {
-    return new Promise((resolve, reject) =>
+  async getColumns() {
+    return new Promise((resolve, reject) => {
       this.db.all(
         `SELECT NAME as COLUMN_NAME, DFLT_VALUE as COLUMN_DEFAULT, TYPE as DATA_TYPE FROM pragma_table_info('${this.table}')`,
         [],
-        function (err, rows) {
+        (err, rows) => {
           if (err) {
-            console.log(err.message);
+            console.log("Error running sql: " + sql);
+            console.log(err);
             reject(err);
+          } else {
+            resolve(rows);
           }
-          // this.columns = rows;
-          resolve(rows);
         }
-      )
-    );
+      );
+    });
   }
 
   runQuery(sql, params = []) {
@@ -66,7 +55,7 @@ class AppDAO {
     });
   }
 
-  get(where = "", params = []) {
+  async get(where = "", params = []) {
     let sql = `SELECT * FROM ${this.table}  ${
       where !== "" ? `WHERE ${where}` : ""
     }`;
@@ -83,7 +72,7 @@ class AppDAO {
     });
   }
 
-  getById(id) {
+  async getById(id) {
     let sql = `SELECT * FROM ${this.table} WHERE ${this.key} = ?`;
     return new Promise((resolve, reject) => {
       this.db.get(sql, [id], (err, result) => {
@@ -98,7 +87,7 @@ class AppDAO {
     });
   }
 
-  all(where = "", params = []) {
+  async all(where = "", params = []) {
     let sql = `SELECT * FROM ${this.table} ${
       where !== "" ? `WHERE ${where}` : ""
     }`;
@@ -115,13 +104,17 @@ class AppDAO {
     });
   }
 
-  getPage(page, pageSize, where = "", params = []) {
+  async getPage(page, pageSize, where = "", params = []) {
     const offset = (Number(page) - 1) * Number(pageSize);
-    const sql = `SELECT * FROM ${this.table} ${
+    const sql = `SELECT * FROM ${
+      this.table
+    } CROSS JOIN (SELECT COUNT(*) AS totalRows
+                  FROM ${this.table}) ${
       where !== "" ? `WHERE ${where}` : ""
     } LIMIT ?,?`;
+
     return new Promise((resolve, reject) => {
-      this.db.all(sql, [offset, pageSize, ...params], (err, rows) => {
+      this.db.all(sql, [offset, Number(pageSize), ...params], (err, rows) => {
         if (err) {
           console.log("Error running sql: " + sql);
           console.log(err);
@@ -138,8 +131,8 @@ class AppDAO {
     const _columns = columns.slice(1, columns.length);
 
     let sql = `INSERT INTO ${this.table} (${_columns
-      .map((item, index) => item["COLUMN_NAME"])
-      .join(",")}) VALUES (${_columns.map((item, index) => "?").join(",")})`;
+      .map((x) => x["COLUMN_NAME"])
+      .join(", ")}) VALUES (${_columns.map((x) => "?").join(", ")})`;
 
     return this.runQuery(sql, Object.values(data));
   }
@@ -155,7 +148,7 @@ class AppDAO {
     return this.runQuery(sql, [...Object.values(data), id]);
   }
 
-  delete(id) {
+  async delete(id) {
     return this.runQuery(`DELETE FROM ${this.table} WHERE ${this.key} = ?`, [
       id,
     ]);

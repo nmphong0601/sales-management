@@ -11,10 +11,11 @@
       "common/*": ["./common/*"],
       "pages/*": ["./pages/*"],
       "services/*": ["./services/*"],
+      "actions/*": ["./actions/*"],
       "*": [
-        "node_modules/*/dist/index",
-        "node_modules/*/index",
-        "node_modules/*"
+        "../node_modules/*/dist/index",
+        "../node_modules/*/index",
+        "../node_modules/*"
       ]
     }
   }

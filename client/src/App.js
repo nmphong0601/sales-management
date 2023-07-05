@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
-const PrimaryLayout = React.lazy(() => import("containers/Primary"));
+import { Routes, Route, Navigate } from 'react-router-dom';
+const PrimaryLayout = React.lazy(() => import('containers/Primary'));
 const LoginPage = React.lazy(() => import('pages/auth/login'));
 
 const loading = () => (
@@ -28,12 +28,7 @@ class App extends React.Component {
               public={true}
               element={<LoginPage />}
             />
-            <Route
-              path="/*"
-              exac={true}
-              public={true}
-              element={<LoginPage />}
-            />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </Suspense>
       </>

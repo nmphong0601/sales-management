@@ -35,20 +35,27 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:8000",
+        url: "https://localhost:8000",
       },
     ],
     components: {
       securitySchemes: {
+        BasicAuth: {
+          type: "http",
+          description: "Basic Authorization",
+          scheme: "basic",
+        },
         ApiKeyAuth: {
           type: "apiKey",
-          name: "x-access-token",
+          name: "x-api-key",
           in: "header",
+          value: process.env.SECRET_KEY,
         },
       },
     },
     security: [
       {
+        BasicAuth: [],
         ApiKeyAuth: [],
       },
     ],

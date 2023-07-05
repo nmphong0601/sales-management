@@ -3,9 +3,6 @@ const express = require("express");
 const user_router = express.Router({ mergeParams: true });
 const Users = require("../../../services/users");
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
-
 /**
  * @swagger
  * tags:
@@ -74,7 +71,12 @@ user_router.get("/", function (req, res, next) {
  */
 user_router.get("/paging", function (req, res, next) {
   try {
-    Users.paged(req.query.page, req.query.pageSize).then((data) => {
+    Users.paged(
+      req.query.page,
+      req.query.pageSize,
+      req.query.where,
+      req.query.params
+    ).then((data) => {
       data = data.map((item) => {
         var mappedData = {
           Id: item["Id"],
@@ -85,12 +87,22 @@ user_router.get("/paging", function (req, res, next) {
           f_Permission: item["f_Permission"],
           f_Address: item["f_Address"],
           f_Phone: item["f_Phone"],
+          totalRows: item["totalRows"],
         };
 
         return mappedData;
       });
 
-      res.json(data);
+      res.json({
+        pagingInfor: {
+          page: Number(req.query.page),
+          pageSize: Number(req.query.pageSize),
+          search: req.query.where,
+          params: req.query.params,
+          totalItems: Number(data[0].totalRows),
+        },
+        items: data,
+      });
     });
   } catch (err) {
     console.error(`Error while getting users `, err.message);
@@ -315,80 +327,6 @@ user_router.delete("/:id", function (req, res, next) {
   } catch (err) {
     console.error(`Error while delete user `, err.message);
     next(err);
-  }
-});
-
-/**
- * @swagger
- * /api/v1/users/login:
- *   post:
- *     summary: Login
- *     tags:
- *      - Users
- *     requestBody:
- *       required: true
- *       description: User object.
- *       content:
- *         application/json:
- *           schema:
- *             properties:
- *               Username:
- *                 type: string
- *               Password:
- *                 type: string
- *           examples:
- *             User object example:
- *               sumary: User object example
- *               value: {Username: "User name", Password: "123456"}
- *     responses:
- *       200:
- *         description: The user response
- */
-user_router.post("/login", async (req, res) => {
-  try {
-    const { Username, Password } = req.body;
-    // Make sure there is an Email and Password in the request
-    if (!(Username && Password)) {
-      res.status(400).send("All input is required");
-    }
-
-    Users.all("f_Username = ?", [Username]).then((data) => {
-      if (Array.isArray(data) && data.length > 0) {
-        var users = data;
-        var pHash = bcrypt.hashSync(Password, users[0]?.f_Salt);
-
-        if (pHash === users[0]?.f_Password) {
-          // * CREATE JWT TOKEN
-          const token = jwt.sign(
-            {
-              user_id: users[0]?.Id,
-              user_name: users[0]?.f_Username,
-              user_email: users[0]?.f_Email,
-              user_role: users[0]?.f_Permission === 1 ? "admin" : "user",
-            },
-            process.env.SECRET_KEY,
-            {
-              expiresIn: "1h", // 60s = 60 seconds - (60m = 60 minutes, 2h = 2 hours, 2d = 2 days)
-            }
-          );
-
-          users[0].f_Token = token;
-
-          res.status(200).json({
-            Username: users[0]?.f_Username,
-            Email: users[0]?.f_Email,
-            IsAdmin: users[0]?.f_Permission === 1 ? true : false,
-            AccessToken: users[0]?.f_Token,
-          });
-        } else {
-          res.status(400).send("No Match");
-        }
-      } else {
-        res.status(404).send("User not found");
-      }
-    });
-  } catch (err) {
-    console.log(err);
   }
 });
 

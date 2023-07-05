@@ -1,31 +1,57 @@
 const jwt = require("jsonwebtoken");
+const UserServices = require("./services/users");
 
-const verifyToken = (req, res, next) => {
-  if (!req.url.includes("login")) {
-    const token =
-      req.body.token || req.query.token || req.headers["x-access-token"];
+const authorize = async (req, res, next) => {
+  if (!req.url.includes("login") && !req.url.includes("token")) {
+    let token =
+      req.body.token ||
+      req.query.token ||
+      req.headers["x-access-token"] ||
+      null;
+    const apiKey =
+      req.body.apiKey || req.query.apiKey || req.headers["x-api-key"] || null;
 
-    if (!token) {
+    if (req.headers.authorization) {
+      // verify auth credentials
+      const base64Credentials = req.headers.authorization.split(" ")[1];
+      const credentials = Buffer.from(base64Credentials, "base64").toString(
+        "ascii"
+      );
+      const [username, password] = credentials.split(":");
+      const user = await UserServices.login({ username, password });
+      if (!user) {
+        return res
+          .status(401)
+          .json({ message: "Invalid Authentication Credentials" });
+      }
+
+      token = user.accessToken;
+    }
+
+    if (!token || !apiKey) {
       return res.status(403).send("A token is required for authentication");
     }
     try {
-      const decoded = jwt.verify(token, process.env.SECRET_KEY);
-      req.user = decoded;
+      const result = await UserServices.verifyToken(token, apiKey);
+      if (result.error !== false) {
+        const { user_role } = result.tokenDetails;
 
-      const { user_role } = req.user;
-      if (
-        user_role != "admin" &&
-        (req.baseUrl != "/api/v1/products" ||
-          (req.baseUrl == "/api/v1/products" && req.method != "GET"))
-      ) {
-        return res.status(403).send("Access is denied! You have no permission");
+        if (
+          user_role != "admin" &&
+          (req.baseUrl != "/api/v1/products" ||
+            (req.baseUrl == "/api/v1/products" && req.method != "GET"))
+        ) {
+          return res
+            .status(403)
+            .send("Access is denied! You have no permission");
+        }
       }
     } catch (err) {
-      return res.status(401).send("Invalid Token");
+      return res.status(401).send(err.message);
     }
   }
 
   return next();
 };
 
-module.exports = verifyToken;
+module.exports = authorize;

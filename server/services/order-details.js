@@ -8,8 +8,8 @@ async function all(where = "", params = []) {
   return OrderDetail.getAll(where, params);
 }
 
-async function paged(page = 1, pageSize = 10) {
-  return Product.getPage(page, pageSize);
+async function paged(page = 1, pageSize = 10, where = "", params = []) {
+  return OrderDetail.getPage(page, pageSize, where, params);
 }
 
 async function insert(data) {
