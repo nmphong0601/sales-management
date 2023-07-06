@@ -2,52 +2,57 @@ import axios from 'axios';
 
 class Services {
   constructor(props) {
+    const userInfor = JSON.parse(localStorage.getItem('userInfor')) || null;
     this.endpoint = props.object;
     this.serviceURL = `${process.env.API_URL}/${this.endpoint}/`;
-
-    // Add a request interceptor
-    axios.interceptors.request.use((config) => {
-      if (!config.url.includes('login')) {
-        const userInfor = JSON.parse(localStorage.getItem('userInfor'));
-        if (userInfor) {
-          const token = userInfor.accessToken;
-
-          config.headers['x-api-key'] = process.env.API_KEY;
-          config.headers['x-access-token'] = token || null;
-
-          return config;
-        }
-      }
-
-      return config;
+    const axiosInstance = axios.create({
+      baseURL: this.serviceURL,
+      headers: {
+        'x-api-key': process.env.API_KEY,
+        'x-access-token': userInfor?.accessToken,
+      },
     });
 
+    // Add a request interceptor
+    axiosInstance.interceptors.request.use(
+      (config) => {
+        if (!config.headers['x-access-token']) {
+          const userInfor = JSON.parse(localStorage.getItem('userInfor'));
+          const { accessToken } = userInfor;
+
+          config.headers['x-access-token'] = accessToken;
+        }
+
+        return config;
+      }
+    );
+
     // Add a response interceptor
-    axios.interceptors.response.use(
+    axiosInstance.interceptors.response.use(
       function (response) {
         // Do something with response data
         return response;
       },
-      function (error) {
-        const { response } = error;
-        if (response.data === 'Token is expired') {
-          const userInfor = JSON.parse(localStorage.getItem('userInfor'));
+      async function (error) {
+        const { response, config } = error;
 
-          return axios
-            .get(`${process.env.API_URL}/auths/token`, {
-              params: { refreshToken: userInfor.refreshToken },
-            })
-            .then(({ accessToken }) => {
-              userInfor.accessToken = accessToken;
-              localStorage.setItem('userInfor', JSON.stringify(userInfor));
-            });
+        if (response.status === 401 && !config.sent) {
+          config.sent = true;
+          const result = await axios.get(`${process.env.API_URL}/auths/token`, {
+            params: { refreshToken: userInfor.refreshToken },
+          });
+
+          config.headers['x-access-token'] = result?.data?.accessToken;
+          return axiosInstance.request(config);
         }
         return Promise.reject(error);
       }
     );
+
+    this.axiosInstance = axiosInstance;
   }
   async all() {
-    return axios
+    return this.axiosInstance
       .get(this.serviceURL)
       .then((response) => {
         if (response.statusText !== 'OK') {
@@ -69,7 +74,7 @@ class Services {
       params: pagingInfor.params || [],
     };
 
-    return axios
+    return this.axiosInstance
       .get(this.serviceURL + 'paging', { params: parameters })
       .then((response) => {
         if (response.statusText !== 'OK') {
@@ -83,7 +88,7 @@ class Services {
       });
   }
   async single(id) {
-    return axios
+    return this.axiosInstance
       .get(this.serviceURL + id)
       .then((response) => {
         if (response.statusText !== 'OK') {
@@ -98,7 +103,7 @@ class Services {
       });
   }
   async create(newExam) {
-    return axios
+    return this.axiosInstance
       .post(this.serviceURL, { newExam })
       .then((response) => {
         if (response.statusText !== 'OK') {
@@ -113,7 +118,7 @@ class Services {
       });
   }
   async delete(id) {
-    return axios
+    return this.axiosInstance
       .delete(this.serviceURL + id)
       .then((response) => {
         if (response.statusText !== 'OK') {
@@ -128,7 +133,7 @@ class Services {
       });
   }
   async update(id, updatedExam) {
-    return axios
+    return this.axiosInstance
       .put(this.serviceURL + id, { updatedExam })
       .then((response) => {
         if (response.statusText !== 'OK') {

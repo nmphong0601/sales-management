@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Routes, Route, Navigate } from 'react-router-dom';
-const PrimaryLayout = React.lazy(() => import('containers/Primary'));
+const DarkLayout = React.lazy(() => import('containers/Dark'));
 const LoginPage = React.lazy(() => import('pages/auth/login'));
 
 const loading = () => (
@@ -15,7 +15,7 @@ class App extends React.Component {
       <>
         <Suspense fallback={loading()}>
           <Routes>
-            <Route name="Primary-Layout" element={<PrimaryLayout />}>
+            <Route name="Primary-Layout" element={<DarkLayout />}>
               {routes.map(({ component: Component, ...rest }) => {
                 return (
                   <Route key={rest.path} element={<Component />} {...rest} />

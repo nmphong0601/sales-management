@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router({ mergeParams: true });
 const auth = require("../../../middleware");
 
+router.use("/v1/auths", require("./auths"));
 router.use("/v1/categories", auth, require("./categories"));
 router.use("/v1/comments", auth, require("./comments"));
 router.use("/v1/order-details", auth, require("./order-details"));

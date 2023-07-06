@@ -6,7 +6,7 @@ const Users = require("../../../services/users");
 /**
  * @swagger
  * tags:
- *   name: Authorize
+ *   name: Authorization
  *   description: The users managing API
  */
 
@@ -16,7 +16,7 @@ const Users = require("../../../services/users");
  *   get:
  *     summary: Get Access Token
  *     tags:
- *      - Users
+ *      - Authorization
  *     parameters:
  *       - in: query
  *         name: refreshToken
@@ -36,6 +36,8 @@ auth_router.get("/token", function (req, res, next) {
         accessToken,
         message: "New Access token created successfully",
       });
+    }).catch(error => {
+      return res.status(400).json(error);
     });
   } catch (err) {
     console.error(`Error while getting user `, err.message);
@@ -49,7 +51,7 @@ auth_router.get("/token", function (req, res, next) {
  *   post:
  *     summary: Login
  *     tags:
- *      - Authorize
+ *      - Authorization
  *     requestBody:
  *       required: true
  *       description: User object.

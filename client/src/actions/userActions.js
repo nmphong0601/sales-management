@@ -33,8 +33,3 @@ export const removeItem = createAsyncThunk('user/removeItem', async (id) => {
   const response = await UserServices.delete(id);
   return response.data;
 });
-
-export const login = createAsyncThunk('user/login', async (loginInfo) => {
-  const response = await UserServices.login(loginInfo);
-  return response.data;
-});

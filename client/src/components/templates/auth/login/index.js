@@ -5,13 +5,13 @@ import Button from 'components/atoms/Button';
 import Input from 'components/atoms/Input';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from 'actions/userActions';
+import { login } from 'actions/authActions';
 import { useEffect } from 'react';
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userInfo = useSelector((state) => state.user.userInfor);
+  const userInfo = useSelector((state) => state.auth.userInfor);
   const {
     register,
     unregister,
@@ -50,6 +50,7 @@ const Login = () => {
             />
             <Input
               placeholder="Password..."
+              type="password"
               {...register('password', { required: true })}
             />
             <Button type="submit">Login</Button>

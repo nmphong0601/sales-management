@@ -19,7 +19,7 @@ const navigates = [
     uri: "/",
   },
   {
-    name: "Customers",
+    name: "User",
     icon: <MdPerson className={styles.icon} />,
     uri: "/user",
   },

@@ -21,7 +21,7 @@ async function login({ username, password }) {
 
         // * CREATE JWT TOKEN
         const token = jwt.sign(payload, process.env.SECRET_KEY, {
-          expiresIn: "1m", // 60s = 60 seconds - (60m = 60 minutes, 2h = 2 hours, 2d = 2 days)
+          expiresIn: "15m", // 60s = 60 seconds - (60m = 60 minutes, 2h = 2 hours, 2d = 2 days)
         });
         // * CREATE JWT REFRESH TOKEN
         const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET_KEY, {

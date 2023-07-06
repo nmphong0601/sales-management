@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
-const PrimaryLayout = ({ children, ...props }) => {
+const DarkLayout = ({ children, ...props }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,4 +27,4 @@ const PrimaryLayout = ({ children, ...props }) => {
   );
 };
 
-export default PrimaryLayout;
+export default DarkLayout;

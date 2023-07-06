@@ -6,7 +6,6 @@ import {
   addItem,
   updateItem,
   removeItem,
-  login,
 } from 'actions/userActions';
 
 const initialState = {
@@ -46,10 +45,6 @@ const userReducer = createSlice({
     });
     builder.addCase(removeItem.fulfilled, (state, action) => {
       state.items = action.payload;
-    });
-    builder.addCase(login.fulfilled, (state, action) => {
-      state.userInfor = action.payload;
-      localStorage.setItem('userInfor', JSON.stringify(state.userInfor));
     });
   },
 });

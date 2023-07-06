@@ -16,7 +16,11 @@ const Input = ({ className, children, ...props }, ref) => {
         className || ''
       }`}
     >
-      <input ref={ref} className="w-full bg-transparent" {...props} />
+      <input
+        ref={ref}
+        className="w-full bg-transparent"
+        {...props}
+      />
       {children}
     </div>
   );

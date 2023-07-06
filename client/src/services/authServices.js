@@ -26,6 +26,25 @@ class AuthServices extends Services {
         return error;
       });
   }
+
+  async getAccessToken(refreshToken) {
+
+    return axios
+      .get(`${process.env.API_URL}/auths/token`, {
+        params: { refreshToken: refreshToken },
+      })
+      .then((response) => {
+        if (response.statusText !== 'OK') {
+          this.handleResponseError(response);
+        }
+
+        return response;
+      })
+      .catch((error) => {
+        this.handleError(error);
+        return error;
+      });
+  }
 }
 
 export default new AuthServices({ object: 'auths' });
