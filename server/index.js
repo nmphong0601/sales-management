@@ -35,7 +35,7 @@ const options = {
     },
     servers: [
       {
-        url: "https://localhost:8000",
+        url: "/",
       },
     ],
     components: {
