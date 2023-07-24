@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import {
   MdClose,
@@ -8,50 +8,59 @@ import {
   MdLogout,
   MdSearch,
   MdChevronRight,
-} from "react-icons/md";
+} from 'react-icons/md';
 
-import styles from "./Index.module.scss";
+import styles from './Index.module.scss';
 
 const navigates = [
   {
-    name: "Dashboard",
+    name: 'Dashboard',
     icon: <MdWindow className={styles.icon} />,
-    uri: "/",
+    uri: '/',
   },
   {
-    name: "User",
+    name: 'User',
     icon: <MdPerson className={styles.icon} />,
-    uri: "/user",
+    uri: '/user',
   },
   {
-    name: "Logout",
+    name: 'Logout',
     icon: <MdLogout className={styles.icon} />,
-    uri: "/account/logout",
+    uri: '/account/logout',
   },
 ];
 
 const Sidebar = (props) => {
   const { className, ...otherProps } = props;
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    navigates.forEach((nav, index) => {
+      if (location.pathname.includes(nav.uri)) {
+        setActive(index);
+      }
+    });
+  }, [location]);
 
   return (
     <aside
-      className={`${styles["sidebar"]} ${className || ""} ${
-        isOpen ? "translate-x-0" : ""
+      className={`${styles['sidebar']} ${className || ''} ${
+        isOpen ? 'translate-x-0' : ''
       }`}
       {...otherProps}
     >
       <div className="lg:flex items-center hidden">
         <img
-          src={"/assets/images/metalic-logo.png"}
+          src={'/assets/images/metalic-logo.png'}
           width={48}
           height={48}
           alt="metalic-logo"
         />
         <h2>Sales Management</h2>
       </div>
-      <div className={`${styles["search-bar"]}`}>
+      <div className={`${styles['search-bar']}`}>
         <input className="w-full bg-transparent" placeholder="Search..." />
         <MdSearch className="text-nmp-white" size={20} />
       </div>
@@ -62,8 +71,8 @@ const Sidebar = (props) => {
               key={index}
               to={nav.uri}
               onClick={(e) => setActive(index)}
-              className={`${styles["nav"]} ${
-                active === index ? styles["active"] : ""
+              className={`${styles['nav']} ${
+                active === index ? styles['active'] : ''
               }`}
             >
               {nav.icon}
@@ -77,7 +86,7 @@ const Sidebar = (props) => {
         onClick={(e) => setIsOpen(!isOpen)}
       >
         <MdChevronRight
-          className={`w-full h-full ${isOpen ? "rotate-180" : ""}`}
+          className={`w-full h-full ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
     </aside>

@@ -14,18 +14,19 @@ class Services {
     });
 
     // Add a request interceptor
-    axiosInstance.interceptors.request.use(
-      (config) => {
-        if (!config.headers['x-access-token']) {
-          const userInfor = JSON.parse(localStorage.getItem('userInfor'));
-          const { accessToken } = userInfor;
-
-          config.headers['x-access-token'] = accessToken;
-        }
-
-        return config;
+    axiosInstance.interceptors.request.use((config) => {
+      const userInfor = JSON.parse(localStorage.getItem('userInfor'));
+      if (!config.headers['x-access-token']) {
+        const { accessToken } = userInfor;
+        config.headers['x-access-token'] = accessToken;
+      } else {
+        // Update accessToken in localStorage from header
+        userInfor.accessToken = config.headers['x-access-token'];
+        localStorage.setItem('userInfor', JSON.stringify(userInfor));
       }
-    );
+
+      return config;
+    });
 
     // Add a response interceptor
     axiosInstance.interceptors.response.use(
@@ -36,11 +37,13 @@ class Services {
       async function (error) {
         const { response, config } = error;
 
+        // Get new accessToken
         if (response.status === 401 && !config.sent) {
           config.sent = true;
-          const result = await axios.get(`${process.env.API_URL}/auths/token`, {
-            params: { refreshToken: userInfor.refreshToken },
-          });
+          const result = await axios.get(
+            `${process.env.API_URL}/auths/refresh`,
+            { withCredentials: true }
+          );
 
           config.headers['x-access-token'] = result?.data?.accessToken;
           return axiosInstance.request(config);

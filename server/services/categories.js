@@ -1,7 +1,11 @@
 const Category = require("../respositories/category");
 
-async function single(id) {
-  return Category.getSingle(id);
+async function single(where = "", params = []) {
+  return Category.getSingle(where, params);
+}
+
+async function singleById(id) {
+  return Category.getSingleById(id);
 }
 
 async function all(where = "", params = []) {
@@ -26,6 +30,7 @@ async function remove(id) {
 
 module.exports = {
   single,
+  singleById,
   all,
   paged,
   insert,

@@ -72,6 +72,24 @@ class AppDAO {
     });
   }
 
+  async getOne(where = "", params = []) {
+    let sql = `SELECT * FROM ${this.table} ${
+      where !== "" ? `WHERE ${where}` : ""
+    } LIMIT 1`;
+
+    return new Promise((resolve, reject) => {
+      this.db.get(sql, params, (err, result) => {
+        if (err) {
+          console.log("Error running sql: " + sql);
+          console.log(err);
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
+
   async getById(id) {
     let sql = `SELECT * FROM ${this.table} WHERE ${this.key} = ?`;
     return new Promise((resolve, reject) => {

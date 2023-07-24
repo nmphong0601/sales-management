@@ -68,31 +68,60 @@ async function verifyToken(token, apiKey) {
 
 async function verifyRefreshToken(refreshToken) {
   const privateKey = process.env.REFRESH_SECRET_KEY;
-  const data = await UserToken.getAll("Token = ?", [refreshToken]);
+  const foundUser = await UserToken.getSingle("Token = ?", [refreshToken]);
 
   return new Promise((resolve, reject) => {
-    if (!data) return reject({ error: true, message: "Invalid refresh token" });
-
-    jwt.verify(refreshToken, privateKey, (err, tokenDetails) => {
-      if (err) {
-        if (err.message === "jwt expired") {
-          return reject({ error: true, message: "Refresh token is expired" });
-        } else {
-          return reject({ error: true, message: "Invalid refresh token" });
+    // Detect refreshToken reused!
+    if (!foundUser) {
+      jwt.verify(refreshToken, privateKey, async (err, decoded) => {
+        if (err) {
+          reject({ error: true, message: "Forbidden" });
         }
+
+        const hackedUser = await UserToken.getSingle("UserId = ?", [
+          decoded.user_id,
+        ]);
+
+        await UserToken.delete(hackedUser?.Id);
+      });
+
+      reject({ error: true, message: "Forbidden" });
+    }
+
+    jwt.verify(refreshToken, privateKey, async (err, decoded) => {
+      if (err || foundUser.UserId !== decoded.user_id) {
+        reject({ error: true, message: "Forbidden" });
       }
 
       const payload = {
-        user_id: tokenDetails?.user_id,
-        user_name: tokenDetails?.user_name,
-        user_role: tokenDetails?.user_role,
+        user_id: decoded?.user_id,
+        user_name: decoded?.user_name,
+        user_role: decoded?.user_role,
       };
-      const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
+
+      // * CREATE NEW JWT TOKEN
+      const newAccessToken = jwt.sign(payload, process.env.SECRET_KEY, {
         expiresIn: "15m",
       });
 
-      resolve({
-        accessToken,
+      // * CREATE NEW JWT REFRESH TOKEN
+      const newRefreshToken = jwt.sign(
+        payload,
+        process.env.REFRESH_SECRET_KEY,
+        {
+          expiresIn: "1d", // 60s = 60 seconds - (60m = 60 minutes, 2h = 2 hours, 2d = 2 days)
+        }
+      );
+
+      // Saving refreshToken
+      await UserToken.update(foundUser.Id, {
+        UserId: foundUser.UserId,
+        Token: newRefreshToken,
+      });
+
+      return resolve({
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
         error: false,
         message: "Valid refresh token",
       });
@@ -100,7 +129,11 @@ async function verifyRefreshToken(refreshToken) {
   });
 }
 
-async function single(id) {
+async function single(where = "", params = []) {
+  return User.getSingle(where, params);
+}
+
+async function singleById(id) {
   return User.getSingle(id);
 }
 
@@ -131,6 +164,7 @@ async function runQuery(sql) {
 module.exports = {
   login,
   single,
+  singleById,
   all,
   paged,
   insert,

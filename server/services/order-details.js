@@ -1,7 +1,11 @@
 const OrderDetail = require("../respositories/order-detail");
 
-async function single(id) {
-  return OrderDetail.getSingle(id);
+async function single(where = "", params = []) {
+  return OrderDetail.getSingle(where, params);
+}
+
+async function singleById(id) {
+  return OrderDetail.getSingleById(id);
 }
 
 async function all(where = "", params = []) {
@@ -26,6 +30,7 @@ async function remove(id) {
 
 module.exports = {
   single,
+  singleById,
   all,
   paged,
   insert,

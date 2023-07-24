@@ -1,7 +1,11 @@
 const Comment = require("../respositories/comment");
 
-async function single(id) {
-  return Comment.getSingle(id);
+async function single(where = "", params = []) {
+  return Comment.getSingle(where, params);
+}
+
+async function singleById(id) {
+  return Comment.getSingleById(id);
 }
 
 async function all(where = "", params = []) {
@@ -26,6 +30,7 @@ async function remove(id) {
 
 module.exports = {
   single,
+  singleById,
   all,
   paged,
   insert,

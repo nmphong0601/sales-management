@@ -1,7 +1,11 @@
 const Status = require("../respositories/status");
 
-async function single(id) {
-  return Status.getSingle(id);
+async function single(where = "", params = []) {
+  return Status.getSingle(where, params);
+}
+
+async function singleById(id) {
+  return Status.getSingleById(id);
 }
 
 async function all(where = "", params = []) {
@@ -26,6 +30,7 @@ async function remove(id) {
 
 module.exports = {
   single,
+  singleById,
   all,
   paged,
   insert,

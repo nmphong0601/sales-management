@@ -8,17 +8,22 @@ import {
   MdLogout,
 } from 'react-icons/md';
 import { useNavigate, Link } from 'react-router-dom';
-import styles from './Index.module.scss';
 import { useState } from 'react';
 
+import styles from './Index.module.scss';
+
+import { useDispatch } from 'react-redux';
+import { logout } from 'actions/authActions';
+
 const Header = (props) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { className, ...otherProps } = props;
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   const signOut = (e) => {
     e.preventDefault();
-    localStorage.removeItem('userInfor');
+    dispatch(logout());
     navigate('/auth/login');
   };
 

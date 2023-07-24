@@ -1,7 +1,11 @@
 const Order = require("../respositories/order");
 
-async function single(id) {
-  return Order.getSingle(id);
+async function single(where = "", params = []) {
+  return Order.getSingle(where, params);
+}
+
+async function singleById(id) {
+  return Order.getSingleById(id);
 }
 
 async function all(where = "", params = []) {
@@ -26,6 +30,7 @@ async function remove(id) {
 
 module.exports = {
   single,
+  singleById,
   all,
   paged,
   insert,

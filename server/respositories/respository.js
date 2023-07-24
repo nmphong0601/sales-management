@@ -13,7 +13,11 @@ class Respositiory {
     return this.dao.runQuery(sql);
   }
 
-  getSingle(id) {
+  getSingle(where = "", params = []) {
+    return this.dao.getOne(where, params);
+  }
+
+  getSingleById(id) {
     return this.dao.getById(id);
   }
 

@@ -3,6 +3,7 @@ var express = require("express");
 var fs = require("fs");
 const https = require("https");
 var bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 var swaggerJsdoc = require("swagger-jsdoc");
 var swaggerUi = require("swagger-ui-express");
 
@@ -49,7 +50,11 @@ const options = {
           type: "apiKey",
           name: "x-api-key",
           in: "header",
-          value: process.env.SECRET_KEY,
+        },
+        CookieAuth: {
+          type: "apiKey",
+          name: "jwt",
+          in: "cookie",
         },
       },
     },
@@ -67,13 +72,38 @@ const cors = require("cors");
 var app = express();
 
 // Setting up CORS
+// const whitelist = ["https://localhost:8080"];
+app.use(
+  cors({
+    credentials: true,
+    origin: (origin, callback) => {
+      // // Only accept whitelist
+      // if (whitelist?.includes(origin)) {
+      //   return callback(null, true);
+      // }
+
+      // callback(new Error("Not allowed by CORS"));
+
+      // Accept all origin
+      return callback(null, true);
+    },
+  })
+);
 app.use(express.urlencoded(), cors());
+app.use(function (req, res, next) {
+  // Allow Origin localhost port 8000
+  res.header("Access-Control-Allow-Origin", "https://localhost:8080");
+  res.header("Access-Control-Allow-Credentials", true);
+  next();
+});
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
+
+app.use(cookieParser());
 
 // Root endpoint
 app.get("/", (req, res, next) => {

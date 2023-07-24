@@ -1,7 +1,11 @@
 const Producer = require("../respositories/producer");
 
-async function single(id) {
-  return Producer.getSingle(id);
+async function single(where = "", params = []) {
+  return Producer.getSingle(where, params);
+}
+
+async function singleById(id) {
+  return Producer.getSingleById(id);
 }
 
 async function all(where = "", params = []) {
@@ -26,6 +30,7 @@ async function remove(id) {
 
 module.exports = {
   single,
+  singleById,
   all,
   paged,
   insert,

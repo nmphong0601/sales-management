@@ -13,7 +13,23 @@ class AuthServices extends Services {
     };
 
     return axios
-      .post(this.serviceURL + 'login', parameters)
+      .post(this.serviceURL + 'login', parameters, { withCredentials: true })
+      .then((response) => {
+        if (response.statusText !== 'OK') {
+          this.handleResponseError(response);
+        }
+
+        return response;
+      })
+      .catch((error) => {
+        this.handleError(error);
+        return error;
+      });
+  }
+
+  async logout() {
+    return axios
+      .post(this.serviceURL + 'logout', null, { withCredentials: true })
       .then((response) => {
         if (response.statusText !== 'OK') {
           this.handleResponseError(response);
@@ -28,7 +44,6 @@ class AuthServices extends Services {
   }
 
   async getAccessToken(refreshToken) {
-
     return axios
       .get(`${process.env.API_URL}/auths/token`, {
         params: { refreshToken: refreshToken },

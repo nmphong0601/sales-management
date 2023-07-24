@@ -1,7 +1,11 @@
 const Product = require("../respositories/product");
 
-async function single(id) {
-  return Product.getSingle(id);
+async function single(where = "", params = []) {
+  return Product.getSingle(where, params);
+}
+
+async function singleById(id) {
+  return Product.getSingleById(id);
 }
 
 async function all(where = "", params = []) {
@@ -26,6 +30,7 @@ async function remove(id) {
 
 module.exports = {
   single,
+  singleById,
   all,
   paged,
   insert,
