@@ -1,6 +1,7 @@
 // Create express app
 var express = require("express");
 var fs = require("fs");
+var path = require("path");
 const https = require("https");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
@@ -9,8 +10,8 @@ var swaggerUi = require("swagger-ui-express");
 
 const v1Router = require("./routes/api/v1");
 
-var key = fs.readFileSync(__dirname + "/certs/cert.key");
-var cert = fs.readFileSync(__dirname + "/certs/cert.crt");
+var key = fs.readFileSync(path.resolve(__dirname, "certs/cert.key"));
+var cert = fs.readFileSync(path.resolve(__dirname, "certs/cert.crt"));
 const certOptions = {
   key: key,
   cert: cert,
@@ -65,7 +66,10 @@ const options = {
       },
     ],
   },
-  apis: ["./routes/api/v1/*.js", "./routes/api/v2/*.js"],
+  apis: [
+    `./${process.env.ROOT}/routes/api/v1/*.js`,
+    `./${process.env.ROOT}/routes/api/v2/*.js`,
+  ],
 };
 
 const cors = require("cors");
@@ -105,11 +109,6 @@ app.use(bodyParser.json());
 
 app.use(cookieParser());
 
-// Root endpoint
-app.get("/", (req, res, next) => {
-  res.json({ message: "Ok" });
-});
-
 // Insert here other API endpoints
 app.use("/api", v1Router);
 
@@ -123,6 +122,12 @@ app.use(
   })
 );
 
+// Root endpoint
+app.get("/", (req, res, next) => {
+  // res.json({ message: "Ok" });
+  res.redirect("/api-docs");
+});
+
 // Default response for any other request
 app.use(function (req, res) {
   res.status(404);
@@ -131,7 +136,7 @@ app.use(function (req, res) {
 var server = https.createServer(certOptions, app);
 
 // Server port
-var HTTP_PORT = 8000;
+var HTTP_PORT = 8080;
 // Start server
 server.listen(HTTP_PORT, () => {
   console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT));

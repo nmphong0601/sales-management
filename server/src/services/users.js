@@ -11,12 +11,12 @@ async function login({ username, password }) {
   try {
     if (data && Array.isArray(data) && data.length > 0) {
       var users = data;
-      var pHash = bcrypt.hashSync(password, users[0]?.f_Salt);
-      if (pHash === users[0]?.f_Password) {
+      var pHash = bcrypt.hashSync(password, users[0].f_Salt);
+      if (pHash === users[0].f_Password) {
         const payload = {
-          user_id: users[0]?.Id,
-          user_name: users[0]?.f_Username,
-          user_role: users[0]?.f_Permission === 1 ? "admin" : "user",
+          user_id: users[0].Id,
+          user_name: users[0].f_Username,
+          user_role: users[0].f_Permission === 1 ? "admin" : "user",
         };
 
         // * CREATE JWT TOKEN
@@ -32,11 +32,11 @@ async function login({ username, password }) {
 
         await UserToken.add({ UserId: payload.user_id, Token: refreshToken });
         return Promise.resolve({
-          username: users[0]?.f_Username,
-          email: users[0]?.f_Email,
-          isAdmin: users[0]?.f_Permission === 1 ? true : false,
-          accessToken: users[0]?.f_Token,
-          refreshToken: users[0]?.f_RefreshToken,
+          username: users[0].f_Username,
+          email: users[0].f_Email,
+          isAdmin: users[0].f_Permission === 1 ? true : false,
+          accessToken: users[0].f_Token,
+          refreshToken: users[0].f_RefreshToken,
         });
       }
     }
