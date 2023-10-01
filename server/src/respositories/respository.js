@@ -4,7 +4,7 @@ const AppDAO = require("./dao");
 class Respositiory {
   constructor(table, key) {
     //Để khởi tạo một đối tượng từ class table Respositiory chúng ta cần truyền một đối tượng AppDAO cho nó
-    this.dao = new AppDAO("../QLBH_Web.db", table, key);
+    this.dao = new AppDAO("QLBH_Web.db", table, key);
     this.table = table;
   }
 

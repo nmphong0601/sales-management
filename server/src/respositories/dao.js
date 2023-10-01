@@ -1,9 +1,11 @@
+var path = require("path");
 const sqlite3 = require("sqlite3");
 const Promise = require("bluebird");
 
 class AppDAO {
   constructor(dbFilePath, table, key) {
-    this.db = new sqlite3.Database(dbFilePath, (err) => {
+    const filePath = path.resolve(process.env.ROOT, dbFilePath);
+    this.db = new sqlite3.Database(filePath, (err) => {
       //cần truyền vào một đường dẫn đến file csdl sqlite để khởi tạo một kết nối đến file để bắt đầu đọc ghi
       if (err) {
         console.log("Could not connect to database", err); //Kết nối chưa thành công, có lỗi

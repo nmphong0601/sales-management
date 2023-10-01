@@ -2,8 +2,8 @@
 var express = require("express");
 var fs = require("fs");
 var path = require("path");
+let http = require("http");
 const https = require("https");
-var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 var swaggerJsdoc = require("swagger-jsdoc");
 var swaggerUi = require("swagger-ui-express");
@@ -93,7 +93,7 @@ app.use(
     },
   })
 );
-app.use(express.urlencoded(), cors());
+
 app.use(function (req, res, next) {
   // Allow Origin localhost port 8000
   res.header("Access-Control-Allow-Origin", "https://localhost:8080");
@@ -101,11 +101,10 @@ app.use(function (req, res, next) {
   next();
 });
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-
 // parse application/json
-app.use(bodyParser.json());
+app.use(express.json());
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }), cors());
 
 app.use(cookieParser());
 
@@ -124,7 +123,6 @@ app.use(
 
 // Root endpoint
 app.get("/", (req, res, next) => {
-  // res.json({ message: "Ok" });
   res.redirect("/api-docs");
 });
 
@@ -133,10 +131,16 @@ app.use(function (req, res) {
   res.status(404);
 });
 
-var server = https.createServer(certOptions, app);
-
 // Server port
 var HTTP_PORT = 8080;
+var server = null;
+
+if (process.env.NODE_ENV == "production") {
+  server = http.createServer(app);
+} else {
+  server = https.createServer(certOptions, app);
+}
+
 // Start server
 server.listen(HTTP_PORT, () => {
   console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT));
